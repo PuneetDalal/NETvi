@@ -3,15 +3,16 @@ import devices from "../data/devices";
 export default function Sidebar({ addnode, setConnectionType }) {
   return (
     <div
-      style={{
-        width: "220px",
-        height: "100%",
-        backgroundColor: "#f4f4f4",
-        borderRight: "1px solid #ccc",
-        padding: "10px",
-        overflowY: "auto"
-      }}
-    >
+  style={{
+    width: "200px",
+    minWidth: "200px",   // ✅ prevents stretching
+    height: "100%",
+    backgroundColor: "#f0f0f0",
+    borderRight: "1px solid #ccc",
+    padding: "10px",
+    boxSizing: "border-box"
+  }}
+>
       <h3>Components</h3>
 
       {Object.entries(devices).map(([category, items]) => (
