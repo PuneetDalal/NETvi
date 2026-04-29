@@ -3,27 +3,23 @@ import devices from "../data/devices";
 export default function Sidebar({ addnode, setConnectionType }) {
   return (
     <div
-  style={{
-    width: "200px",
-    minWidth: "200px",   // ✅ prevents stretching
-    height: "100%",
-    backgroundColor: "#f0f0f0",
-    borderRight: "1px solid #ccc",
-    padding: "10px",
-    boxSizing: "border-box"
-  }}
->
+      style={{
+        width: "200px",
+        minWidth: "200px",
+        height: "100%",
+        backgroundColor: "#f0f0f0",
+        borderRight: "1px solid #ccc",
+        padding: "10px",
+        boxSizing: "border-box"
+      }}
+    >
       <h3>Components</h3>
 
       {Object.entries(devices).map(([category, items]) => (
         <div key={category} style={{ marginBottom: "20px" }}>
           
-          {/* Category Title */}
-          <h4 style={{ textTransform: "capitalize" }}>
-            {category.replace("-", " ")}
-          </h4>
+          <h4>{category.replace("-", " ")}</h4>
 
-          {/* Items */}
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {items.map((device) => {
               const deviceWithCategory = { ...device, category };
@@ -31,13 +27,25 @@ export default function Sidebar({ addnode, setConnectionType }) {
               return (
                 <div
                   key={device.type}
+
+                  // ✅ DRAG
+                  draggable
+                  onDragStart={(event) => {
+                    event.dataTransfer.setData(
+                      "application/reactflow",
+                      JSON.stringify(deviceWithCategory)
+                    );
+                  }}
+
+                  // ✅ CLICK (RESTORED)
                   onClick={() => {
                     if (category === "connections") {
-                      setConnectionType(device.type); // 🔌 set cable type
+                      setConnectionType(device.type);
                     } else {
-                      addnode(deviceWithCategory); // 🖥 create node
+                      addnode(deviceWithCategory); // 🔥 this was missing
                     }
                   }}
+
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -45,11 +53,10 @@ export default function Sidebar({ addnode, setConnectionType }) {
                     padding: "8px",
                     border: "1px solid #ccc",
                     borderRadius: "8px",
-                    cursor: "pointer",
+                    cursor: "grab",
                     background: "white"
                   }}
                 >
-                  {/* Icon (only for devices) */}
                   {device.icon && (
                     <img
                       src={device.icon}
@@ -63,6 +70,7 @@ export default function Sidebar({ addnode, setConnectionType }) {
               );
             })}
           </div>
+
         </div>
       ))}
     </div>
